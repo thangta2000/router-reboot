@@ -88,7 +88,7 @@ export default {
       port: '',
       user: '',
       password: '',
-      time: 0,
+      time: '',
       server_ip: 'http://103.229.42.221:9498'
     }
   },
