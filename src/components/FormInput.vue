@@ -30,7 +30,6 @@
                   <label for="budget" class="col-form-label">User</label>
                   <input
                     class="form-control"
-                    placeholder="Router username"
                     v-model="user"
                   />
                 </div>
@@ -38,7 +37,6 @@
                   <label for="message" class="col-form-label">Password</label>
                   <input
                     class="form-control"
-                    placeholder="Router password"
                     v-model="password"
                     type="password"
                   />
