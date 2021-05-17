@@ -91,7 +91,7 @@ export default {
       user: '',
       password: '',
       time: '',
-      server_ip: 'http://10.14.140.94:9498'
+      server_ip: 'http://103.229.42.221:9498'
     }
   },
   methods: {
