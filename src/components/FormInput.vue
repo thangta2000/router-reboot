@@ -11,7 +11,7 @@
                   <label for="" class="col-form-label">IP</label>
                   <input
                     class="form-control"
-                    placeholder="Gateway IP"
+                    placeholder="e.g. 192.168.1.1"
                     v-model="ip"
                   />
                 </div>
@@ -19,7 +19,7 @@
                   <label for="" class="col-form-label">Port</label>
                   <input
                     class="form-control"
-                    placeholder="Gateway port"
+                    placeholder="e.g. 443"
                     v-model="port"
                   />
                 </div>
@@ -90,7 +90,7 @@ export default {
       port: '',
       user: '',
       password: '',
-      time: '',
+      time: 0,
       server_ip: 'http://103.229.42.221:9498'
     }
   },
