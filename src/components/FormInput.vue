@@ -59,6 +59,8 @@
                     type="datetime"
                     placeholder="Select datetime"
                     v-if="isSpecificTime"
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value-type='format'
                   ></date-picker>
                   <input
                     class="form-control"
