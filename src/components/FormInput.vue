@@ -28,10 +28,7 @@
               <div class="row">
                 <div class="col-md-6 form-group mb-3">
                   <label for="budget" class="col-form-label">User</label>
-                  <input
-                    class="form-control"
-                    v-model="user"
-                  />
+                  <input class="form-control" v-model="user" />
                 </div>
                 <div class="col-md-6 form-group mb-3">
                   <label for="message" class="col-form-label">Password</label>
@@ -44,20 +41,38 @@
               </div>
 
               <div class="row mb-5">
-                <div class="col-md-12 form-group mb-3">
-                  <label for="budget" class="col-form-label">Time</label>
+                <div class="col-md-6 form-group" style="height: 80px">
+                  <input type="checkbox" v-model="isSpecificTime" />
+                  <label for="budget" class="col-form-label" @click="isSpecificTime = !isSpecificTime"
+                    >Specific Time</label
+                  >
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label
+                    for="budget"
+                    class="col-form-label"
+                    style="display: block"
+                    >Time</label
+                  >
+                  <date-picker
+                    v-model="time"
+                    type="datetime"
+                    placeholder="Select datetime"
+                    v-if="isSpecificTime"
+                  ></date-picker>
                   <input
                     class="form-control"
                     placeholder="Reboot every (1 - 23) hour"
                     v-model="time"
                     type="number"
+                    v-else
                   />
                 </div>
               </div>
               <div class="row justify-content-center">
                 <div class="col-md-5 form-group text-center">
                   <input
-                      type="submit"
+                    type="submit"
                     value="Reboot"
                     class="btn btn-block btn-primary rounded-0 py-2 px-4"
                   />
@@ -79,8 +94,11 @@
 
 <script>
 import axios from 'axios'
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
 
 export default {
+  components: { DatePicker },
   name: 'FormInput',
   data () {
     return {
@@ -89,13 +107,23 @@ export default {
       user: '',
       password: '',
       time: '',
-      server_ip: 'http://103.229.42.221:9498'
+      server_ip: 'http://103.229.42.221:9498',
+      isSpecificTime: false
     }
   },
   methods: {
     checkForm (e) {
-      axios.get(`${this.server_ip}/reboot`, {params: {ip: this.ip, port: this.port, user: this.user, password: this.password, time: this.time}})
-        .then(response => {
+      axios
+        .get(`${this.server_ip}/reboot`, {
+          params: {
+            ip: this.ip,
+            port: this.port,
+            user: this.user,
+            password: this.password,
+            time: this.time
+          }
+        })
+        .then((response) => {
           if (response.data === 'Failed') {
             this.$notify({
               group: 'form',
@@ -110,7 +138,7 @@ export default {
             })
           }
         })
-        .catch(e => {
+        .catch((e) => {
           this.$notify({
             group: 'form',
             title: 'Error!',
