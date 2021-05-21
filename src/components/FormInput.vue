@@ -43,7 +43,10 @@
               <div class="row mb-5">
                 <div class="col-md-6 form-group" style="height: 80px">
                   <input type="checkbox" v-model="isSpecificTime" />
-                  <label for="budget" class="col-form-label" @click="isSpecificTime = !isSpecificTime"
+                  <label
+                    for="budget"
+                    class="col-form-label"
+                    @click="isSpecificTime = !isSpecificTime"
                     >Specific Time</label
                   >
                 </div>
@@ -60,7 +63,7 @@
                     placeholder="Select datetime"
                     v-if="isSpecificTime"
                     format="YYYY-MM-DD HH:mm:ss"
-                    value-type='format'
+                    value-type="format"
                   ></date-picker>
                   <input
                     class="form-control"
@@ -90,6 +93,11 @@
           </div>
         </div>
       </div>
+      <loading
+        :active.sync="isLoading"
+        :can-cancel="false"
+        :is-full-page="true"
+      />
     </div>
   </div>
 </template>
@@ -98,9 +106,11 @@
 import axios from 'axios'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
-  components: { DatePicker },
+  components: { Loading, DatePicker },
   name: 'FormInput',
   data () {
     return {
@@ -110,11 +120,13 @@ export default {
       password: '',
       time: '',
       server_ip: 'http://103.229.42.221:9498',
-      isSpecificTime: false
+      isSpecificTime: false,
+      isLoading: false
     }
   },
   methods: {
     checkForm (e) {
+      this.isLoading = true
       axios
         .get(`${this.server_ip}/reboot`, {
           params: {
@@ -126,6 +138,7 @@ export default {
           }
         })
         .then((response) => {
+          this.isLoading = false
           if (response.data === 'Failed') {
             this.$notify({
               group: 'form',
@@ -135,12 +148,13 @@ export default {
           } else {
             this.$notify({
               group: 'form',
-              title: 'Success',
+              title: response.data,
               type: 'success'
             })
           }
         })
         .catch((e) => {
+          this.isLoading = false
           this.$notify({
             group: 'form',
             title: 'Error!',
