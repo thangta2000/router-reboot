@@ -9,14 +9,17 @@ import '../fonts/icomoon/style.css'
 import '../css/bootstrap.min.css'
 import '../css/style.css'
 import 'vue-good-table/dist/vue-good-table.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(VueGoodTablePlugin)
-
+Vue.use(ElementUI)
 Vue.use(Notifications)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  render: h => h(App)
 })
