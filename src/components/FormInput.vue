@@ -184,15 +184,15 @@ export default {
           field: 'reboot'
         },
         {
-          label: 'Hardware version',
+          label: 'Hardware Version',
           field: 'hard_ver'
         },
         {
-          label: 'Software version',
+          label: 'Software Version',
           field: 'soft_ver'
         },
         {
-          label: 'Upload time',
+          label: 'Up Time',
           field: 'time'
         }
       ],
