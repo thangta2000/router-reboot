@@ -79,7 +79,7 @@
                     </div>
                   </div>
                   <div class="row justify-content-center">
-                    <div class="col-md-5 form-group text-center mb-5">
+                    <div class="col-md-5 form-group text-center mb-4">
                       <input
                         type="submit"
                         value="Reboot"
@@ -89,8 +89,21 @@
                     </div></div
                 ></el-tab-pane>
                 <el-tab-pane label="By File" name="second">
+                  <div
+                    class="text-center mb-4"
+                    v-if="listFileUploaded.length > 0"
+                  >
+                    <vue-good-table
+                      :columns="secondColumns"
+                      :rows="listFileUploaded"
+                      max-height="500px"
+                      :fixed-header="true"
+                      :search-options="tableSearch"
+                      :pagination-options="tablePagination"
+                    />
+                  </div>
                   <div class="row justify-content-center">
-                    <div class="col-md-5 form-group text-center mb-5">
+                    <div class="col-md-5 form-group text-center mb-4">
                       <input
                         type="submit"
                         value="Choose file"
@@ -110,9 +123,9 @@
               </el-tabs>
               <div class="text-center">
                 <vue-good-table
-                  :columns="activeName === 'first' ? columns : secondColumns"
+                  :columns="columns"
                   :rows="listScheduler"
-                  max-height="300px"
+                  max-height="500px"
                   :fixed-header="true"
                   :search-options="tableSearch"
                   :pagination-options="tablePagination"
@@ -160,6 +173,7 @@ export default {
       file: '',
       activeName: 'first',
       listScheduler: [],
+      listFileUploaded: [],
       columns: [
         {
           label: 'IP',
@@ -172,6 +186,10 @@ export default {
       ],
       secondColumns: [
         {
+          label: 'ID',
+          field: 'id'
+        },
+        {
           label: 'IP',
           field: 'ip'
         },
@@ -180,20 +198,20 @@ export default {
           field: 'port'
         },
         {
-          label: 'Reboot',
-          field: 'reboot'
+          label: 'Reboot Info',
+          field: 'reboot_info'
         },
         {
           label: 'Hardware Version',
-          field: 'hard_ver'
+          field: 'hver'
         },
         {
           label: 'Software Version',
-          field: 'soft_ver'
+          field: 'sver'
         },
         {
           label: 'Up Time',
-          field: 'time'
+          field: 'uptime'
         }
       ],
       tableSearch: {
@@ -203,8 +221,8 @@ export default {
       tablePagination: {
         enabled: true,
         mode: 'pages',
-        perPage: 5,
-        perPageDropdown: [5, 10, 15]
+        perPage: 10,
+        perPageDropdown: [10, 15, 20]
       }
     }
   },
@@ -266,11 +284,11 @@ export default {
           this.isLoading = false
           console.log(response)
           if (response.data.success) {
-            this.listScheduler = response.data.results.map((item) => ({
+            this.listFileUploaded = response.data.results.map((item) => ({
               ...item,
-              hard_ver: item.status[0],
-              soft_ver: item.status[1],
-              time: item.status[2]
+              hver: item.status.hver,
+              sver: item.status.sver,
+              uptime: item.status.uptime
             }))
             this.$notify({
               group: 'form',
@@ -301,12 +319,6 @@ export default {
     handleFileUpload () {
       this.file = document.getElementById('selectfilereport').files[0]
       this.uploadFile()
-    },
-    handleClick (tab, event) {
-      if (tab.name === 'first') this.getListSchedule()
-      else {
-        this.listScheduler = []
-      }
     }
   }
 }
