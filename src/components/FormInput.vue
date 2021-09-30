@@ -5,7 +5,7 @@
         <div class="col-md-10">
           <div class="form h-100 contact-wrap p-5">
             <h3 class="text-center mb-4">Router Reboot</h3>
-            <form class="mb-3">
+            <form>
               <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="By IP" name="first">
                   <div class="row">
@@ -78,21 +78,29 @@
                       />
                     </div>
                   </div>
+                  <div class="text-center mb-4">
+                    <vue-good-table
+                      :columns="columns"
+                      :rows="listScheduler"
+                      max-height="500px"
+                      :fixed-header="true"
+                      :search-options="tableSearch"
+                      :pagination-options="tablePagination"
+                    />
+                  </div>
                   <div class="row justify-content-center">
-                    <div class="col-md-5 form-group text-center mb-4">
+                    <div class="col-md-5 text-center">
                       <input
                         type="submit"
                         value="Reboot"
                         class="btn btn-block btn-primary rounded-0 py-2 px-4"
                         @click="checkForm"
                       />
-                    </div></div
-                ></el-tab-pane>
+                    </div>
+                  </div>
+                </el-tab-pane>
                 <el-tab-pane label="By File" name="second">
-                  <div
-                    class="text-center mb-4"
-                    v-if="listFileUploaded.length > 0"
-                  >
+                  <div class="text-center mb-4">
                     <vue-good-table
                       :columns="secondColumns"
                       :rows="listFileUploaded"
@@ -103,7 +111,7 @@
                     />
                   </div>
                   <div class="row justify-content-center">
-                    <div class="col-md-5 form-group text-center mb-4">
+                    <div class="col-md-5 text-center">
                       <input
                         type="submit"
                         value="Choose file"
@@ -121,16 +129,6 @@
                     </div></div
                 ></el-tab-pane>
               </el-tabs>
-              <div class="text-center">
-                <vue-good-table
-                  :columns="columns"
-                  :rows="listScheduler"
-                  max-height="500px"
-                  :fixed-header="true"
-                  :search-options="tableSearch"
-                  :pagination-options="tablePagination"
-                />
-              </div>
             </form>
 
             <div id="form-message-warning mt-4"></div>
@@ -274,6 +272,16 @@ export default {
         this.listScheduler = response.data
       })
     },
+    getListUpload () {
+      axios.get(`${this.server_ip}/list_upload`).then((response) => {
+        this.listFileUploaded = response.data.map((item) => ({
+          ...item,
+          hver: item.status.hver,
+          sver: item.status.sver,
+          uptime: item.status.uptime
+        }))
+      })
+    },
     async uploadFile () {
       this.loadfile = true
       let formData = new FormData()
@@ -284,12 +292,6 @@ export default {
           this.isLoading = false
           console.log(response)
           if (response.data.success) {
-            this.listFileUploaded = response.data.results.map((item) => ({
-              ...item,
-              hver: item.status.hver,
-              sver: item.status.sver,
-              uptime: item.status.uptime
-            }))
             this.$notify({
               group: 'form',
               title: 'Success',
@@ -319,6 +321,10 @@ export default {
     handleFileUpload () {
       this.file = document.getElementById('selectfilereport').files[0]
       this.uploadFile()
+    },
+    handleClick (tab) {
+      if (tab.name === 'first') this.getListSchedule()
+      else this.getListUpload()
     }
   }
 }
